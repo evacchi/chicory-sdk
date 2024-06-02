@@ -29,6 +29,16 @@ class ManifestWasmUrl extends ManifestWasm {
     }
 }
 
+class ManifestWasmByteArray extends ManifestWasm {
+    final String name;
+    final byte[] bytes;
+
+    public ManifestWasmByteArray(String name, byte[] bytes) {
+        this.name = name;
+        this.bytes = bytes;
+    }
+}
+
 public class Manifest {
     final ManifestWasm[] wasms;
 
@@ -46,6 +56,12 @@ public class Manifest {
         var wasm = new ManifestWasmFile(path);
         return new Manifest(new ManifestWasm[]{wasm});
     }
+
+    public static Manifest fromBytes(String name, byte[] bytes) {
+        var wasm = new ManifestWasmByteArray(name, bytes);
+        return new Manifest(new ManifestWasm[]{wasm});
+    }
+
 
     Manifest(ManifestWasm[] wasms) {
         this.wasms = wasms;

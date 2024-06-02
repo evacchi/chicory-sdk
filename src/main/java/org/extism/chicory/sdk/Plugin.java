@@ -60,11 +60,14 @@ public class Plugin {
             }
         } else if (wasm instanceof ManifestWasmFile) {
             builder = Module.builder(((ManifestWasmFile) wasm).filePath);
+        } else if (wasm instanceof ManifestWasmByteArray) {
+            builder = Module.builder(((ManifestWasmByteArray) wasm).bytes);
         } else {
             throw new RuntimeException("We don't know what to do with this manifest");
         }
 
-        this.instance = builder.withLogger(logger).build()
+        this.instance = builder.withLogger(logger)
+                .build()
                 .withHostImports(imports)
                 .instantiate();
     }
@@ -76,8 +79,10 @@ public class Plugin {
         if (result == 0) {
             return kernel.getOutput();
         } else {
-            throw new RuntimeException("Failed");
+            throw new ExtismException("Failed");
         }
     }
+
+    public void close() {}
 
 }
