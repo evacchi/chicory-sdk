@@ -7,10 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.extism.chicory.sdk.wasm.WasmSourceResolver;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
+import static org.extism.chicory.sdk.TestWasmSources.CODE;
+import static org.extism.sdk.TestWasmSources.CODE;
 import static org.junit.jupiter.api.Assertions.*;
 
 
@@ -18,7 +21,7 @@ public class PluginTest {
 
     @Test
     public void testGreet() {
-        var manifest = Manifest.fromUrl("https://github.com/extism/plugins/releases/download/v1.1.0/greet.wasm");
+        var manifest = new WasmSourceResolver().("https://github.com/extism/plugins/releases/download/v1.1.0/greet.wasm");
         var plugin = new Plugin(manifest);
         var input = "Benjamin";
         var result = new String(plugin.call("greet", input.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
@@ -54,7 +57,7 @@ public class PluginTest {
     public void shouldInvokeFunctionFromUrlWasmSource() {
         var url = "https://github.com/extism/plugins/releases/latest/download/count_vowels.wasm";
         var config = Map.of("vowels", "aeiouyAEIOUY");
-        var manifest = new Manifest(List.of(UrlWasmSource.fromUrl(url)), null, config);
+        var manifest = new Manifest(Manifest.fromUrl(url), null, config);
         var plugin = new Plugin(manifest, false, null);
         var output = plugin.call("count_vowels", "Yellow, World!");
         assertThat(output).isEqualTo("{\"count\":4,\"total\":4,\"vowels\":\"aeiouyAEIOUY\"}");
@@ -116,7 +119,7 @@ public class PluginTest {
     public void shouldInvokeFunctionFromByteArrayWasmSource() {
         var manifest = new Manifest(CODE.byteArrayWasmSource());
         var output = Extism.invokeFunction(manifest, "count_vowels", "Hello World");
-        assertThat(output).isEqualTo("{\"count\":3,\"total\":3,\"vowels\":\"aeiouAEIOU\"}");
+        assertEquals(output,"{\"count\":3,\"total\":3,\"vowels\":\"aeiouAEIOU\"}");
     }
 
     @Test
@@ -138,7 +141,7 @@ public class PluginTest {
 
         try (var plugin = new Plugin(manifest, false, null)) {
             var output = plugin.call(functionName, input);
-            assertThat(output).contains("\"count\":3");
+            assert(output).contains("\"count\":3");
         }
     }
 

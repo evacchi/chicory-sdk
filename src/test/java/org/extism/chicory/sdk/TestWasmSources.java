@@ -1,8 +1,8 @@
-package org.extism.chicory.sdk;
+package org.extism.sdk;
 
-import org.extism.sdk.wasm.ByteArrayWasmSource;
-import org.extism.sdk.wasm.PathWasmSource;
-import org.extism.sdk.wasm.WasmSourceResolver;
+import org.extism.chicory.sdk.wasm.ByteArrayWasmSource;
+import org.extism.chicory.sdk.wasm.PathWasmSource;
+import org.extism.chicory.sdk.wasm.WasmSourceResolver;
 
 import java.io.IOException;
 import java.nio.file.Files;

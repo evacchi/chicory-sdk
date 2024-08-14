@@ -13,8 +13,10 @@ import com.dylibso.chicory.wasi.WasiPreview1;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
-public class Plugin {
+public class Plugin implements AutoCloseable {
     private final Manifest manifest;
     private final Instance instance;
     private final HostImports imports;
@@ -86,4 +88,26 @@ public class Plugin {
         }
     }
 
+
+    /**
+     * Invoke a function with the given name and input.
+     *
+     * @param functionName The name of the exported function to invoke
+     * @param input        The string representing the input data
+     * @return A string representing the output data
+     */
+    public String call(String functionName, String input) {
+
+        Objects.requireNonNull(functionName, "functionName");
+
+        var inputBytes = input == null ? null : input.getBytes(StandardCharsets.UTF_8);
+        var outputBytes = call(functionName, inputBytes);
+        return new String(outputBytes, StandardCharsets.UTF_8);
+    }
+
+
+    @Override
+    public void close() {
+        // no op
+    }
 }
